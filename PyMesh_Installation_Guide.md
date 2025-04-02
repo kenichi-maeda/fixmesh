@@ -152,7 +152,7 @@ Save the file and retry building PyMesh.
 When you see this kind of error:
 ```
 /home/USER/PyMesh/tools/CGAL/SelfIntersection.cpp: In member function ‘void PyMesh::SelfIntersection::detect_self_intersection()’:
-/home/kmaeda/PyMesh/tools/CGAL/SelfIntersection.cpp:113:23: error: ‘_1’ was not declared in this scope
+/home/USER/PyMesh/tools/CGAL/SelfIntersection.cpp:113:23: error: ‘_1’ was not declared in this scope
   113 |                 this, _1, _2);
 
 ```
@@ -175,8 +175,8 @@ find /home/USER/PyMesh/ -name "Straight_skeleton_builder_2_impl.h"
 ```
 Then you will see something like:
 ```
-/home/kmaeda/PyMesh/python/pymesh/third_party/include/CGAL/Straight_skeleton_2/Straight_skeleton_builder_2_impl.h
-/home/kmaeda/PyMesh/third_party/cgal/Straight_skeleton_2/include/CGAL/Straight_skeleton_2/Straight_skeleton_builder_2_impl.h
+/home/USER/PyMesh/python/pymesh/third_party/include/CGAL/Straight_skeleton_2/Straight_skeleton_builder_2_impl.h
+/home/USER/PyMesh/third_party/cgal/Straight_skeleton_2/include/CGAL/Straight_skeleton_2/Straight_skeleton_builder_2_impl.h
 ```
 
 ##### 2. Modify .h in `PyMesh/third_party`
