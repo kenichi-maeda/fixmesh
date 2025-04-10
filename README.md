@@ -2,20 +2,6 @@
 
 This is a repo where you can try different 3D mesh repair methods. It wraps multiple mesh processing libraries such as PyMesh, PyMeshFix, MeshLib, and more.
 
----
-
-## Functions
-
-- Self-intersection removal:
-  - `pymeshfix`
-  - `pymesh`
-  - `meshlib`
-  - `surfacenet`
-  - `local_remesh`
-- Mesh cutting
-- Mesh detachment
-
----
 
 ## Installation
 
