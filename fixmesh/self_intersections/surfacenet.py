@@ -6,14 +6,20 @@ import pyvista as pv
 
 def fix_with_surfaceNet(mesh,  voxel_size=0.01):
     """
-    Fix self-intersections using 3D SurfaceNet.
+    Fix self-intersections using the 3D SurfaceNet.
 
-    Parameters:
-        mesh: pymesh.Mesh
+    This function voxelizes each watertight component of the mesh, assigns unique
+    labels to components, and reconstructs the mesh surface using 3D SurfaceNet.
+    (Original Work: Sarah F. Frisken, SurfaceNets for Multi-Label Segmentations with 
+    Preservation of Sharp Boundaries, Journal of Computer Graphics Techniques (JCGT), 
+    vol. 11, no. 1, 34-54, 2022.)
+
+    Args:
+        mesh (pymesh.Mesh): The input mesh with self-intersections.
+        voxel_size (float, optional): The voxel size. Defaults to 0.01.
 
     Returns:
-        pyvista.PolyData:
-            A new mesh with labels.
+        pyvista.PolyData: The repaired mesh with labels.
     """
     mesh = _pymesh_to_trimesh(mesh)
     components = mesh.split(only_watertight=True)

@@ -5,15 +5,13 @@ import pymesh
 
 def cut_repair(mesh):
     """
-    Fix self-intersections by cutting mesh.
+    Fix self-intersections by cutting the given mesh.
 
-    Parameters:
-        mesh: 
-            pymesh.Mesh
+    Args:
+        mesh (pymesh.Mesh): The input mesh with self-intersections.
 
     Returns:
-        pymesh.Mesh:
-            A new mesh with no self-intersections.
+        pymesh.Mesh: The repaired mesh with no self-intersections.
     """
 
     count = _count_num_components(mesh)

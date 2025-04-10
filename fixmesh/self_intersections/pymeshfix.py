@@ -1,16 +1,15 @@
 import pymesh
 import pymeshfix
 
-def fix_with_pymeshfix(mesh: 'pymesh.Mesh') -> 'pymesh.Mesh':
+def fix_with_pymeshfix(mesh):
     """
     Fix self-intersections using PyMeshFix.
 
-    Parameters:
-        mesh: pymesh.Mesh
+    Args:
+        mesh (pymesh.Mesh): The input mesh with self-intersections.
 
     Returns:
-        pymesh.Mesh:
-            A new mesh with no self-intersections.
+        pymesh.Mesh: The repaired mesh with no self-intersections.
     """
     vertices = mesh.vertices.copy()
     faces = mesh.faces.copy()

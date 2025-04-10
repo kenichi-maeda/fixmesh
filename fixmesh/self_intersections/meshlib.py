@@ -2,24 +2,21 @@ import meshlib.mrmeshpy as mrmesh
 import numpy as np
 import pymesh
 
-def fix_with_meshlib(file_path, details):
+def fix_with_meshlib(file_path, voxel_size=0.01):
     """
     Fix self-intersections using MeshLib.
 
-    Parameters:
-        file_path:
-            A path to the input mesh.
-        details:
-            Voxel size.
+    Args:
+        mesh (pymesh.Mesh): The input mesh with self-intersections.
+        voxel_size (float, optional): The voxel size. Defaults to 0.01.
 
     Returns:
-        pymesh.Mesh:
-            A new mesh with no self-intersections.
+        pymesh.Mesh: The repaired mesh with no self-intersections.
     """
     mesh = mrmesh.loadMesh(file_path)
 
     # Fix mesh
-    mrmesh.fixSelfIntersections(mesh, details)
+    mrmesh.fixSelfIntersections(mesh, voxel_size)
 
     # Revert to pymesh
     vertices = np.array([list(v) for v in mesh.points.vec]) 

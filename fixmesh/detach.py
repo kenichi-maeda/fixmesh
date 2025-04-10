@@ -14,18 +14,23 @@ def detach_repair(
     """
     Fix self-intersections by detaching mesh.
 
-    Parameters:
-        mesh: 
-            pymesh.Mesh
+    Args:
+        input_path (string): The path to the input mesh.
+        contact_thresold (float, optional): The separation distance between meshes. Defaults to 0.06.
+        max_iters (int, optional): The number of iterations to repair. Defaults to 10.
+        num_sample_points (int, optional): The number of sampling points of the "reference" mesh.
 
     Returns:
-        pymesh.Mesh:
+        trimesh.Mesh:
             A new mesh with no self-intersections.
 
     1) Load a mesh and split into submeshes.
     2) Identify smallest-volume piece as 'inner', largest-volume piece as 'outer'.
     3) Convert each to Open3D. 
     4) Iteratively shrink the inner mesh so it stays inside the outer.
+
+
+    
     """
     tm = trimesh.load(input_path, process=False)
     submeshes = tm.split(only_watertight=True)

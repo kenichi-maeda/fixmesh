@@ -7,18 +7,14 @@ from numpy.linalg import norm
 
 def fix_with_localRemesh(mesh, detail=2.4):
     """
-    Fix self-intersections and remesh the joint sections.
+    Fix self-intersections and remesh joint sections.
 
-    Parameters:
-        mesh: 
-            pymesh.Mesh
-
-        detail:
-            Resolution for remesh.
+    Args:
+        mesh (pymesh.Mesh): The input mesh with self-intersections.
+        detail (float, optional): The value controls the finess of the remesh. Defaults to 2.4.
 
     Returns:
-        pymesh.Mesh:
-            A new mesh with no self-intersections.
+        pymesh.Mesh: The repaired mesh with no self-intersections.
     """
     intersections = pymesh.detect_self_intersection(mesh)
     intersecting_vertices, intersecting_faces = _track_self_intersecting_faces(mesh, intersections)
