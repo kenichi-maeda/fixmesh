@@ -433,7 +433,7 @@ def visualize_intersection(mesh, filename="Processed Mesh"):
     display(plotter.show(jupyter_backend="trame"))
 
 def intermediate(mesh):
-    temp_file = "data/temp.ply"
+    temp_file = "temp.ply"
     pymesh.save_mesh(temp_file, mesh, ascii=True)
     mesh = pymesh.load_mesh(temp_file)
     
@@ -497,7 +497,6 @@ def full_evaluation(original, mesh1, mesh2, mesh3):
     print(tabulate(table_data, headers="firstrow", tablefmt="grid"))
 
 def full_evaluation2(original, mesh1, mesh2, mesh3, mesh4, mesh5):
-    mesh4 = pyvista_to_pymesh(mesh4)
     before_trimesh = trimesh.Trimesh(vertices=original.vertices, faces=original.faces)
     after_trimesh1 = trimesh.Trimesh(vertices=mesh1.vertices, faces=mesh1.faces)
     after_trimesh2 = trimesh.Trimesh(vertices=mesh2.vertices, faces=mesh2.faces)
@@ -1160,6 +1159,11 @@ def pyvista_to_pymesh(pv_mesh):
     pymesh_mesh = pymesh.form_mesh(vertices, faces)
     return pymesh_mesh
 
+def repair_contour_original(mesh_path):
+    mesh = pymesh.load_mesh(mesh_path)
+    mesh, _ = pymesh.remove_duplicated_vertices(mesh)
+    mesh, _ = pymesh.remove_duplicated_faces(mesh)
+    return mesh
 
 def repair_contour(mesh,  voxel_size=0.01):
     mesh = pymesh_to_trimesh(mesh)
