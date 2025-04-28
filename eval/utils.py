@@ -504,6 +504,8 @@ def full_evaluation2(original, mesh1, mesh2, mesh3, mesh4, mesh5):
     after_trimesh4 = trimesh.Trimesh(vertices=mesh4.vertices, faces=mesh4.faces)
     after_trimesh5 = trimesh.Trimesh(vertices=mesh5.vertices, faces=mesh5.faces)
 
+    outer_pymesh4 = pymesh.compute_outer_hull(pymesh.form_mesh(after_trimesh4.vertices, after_trimesh4.faces))
+
     before_pvmesh = pv.PolyData(original.vertices, np.hstack([np.full((original.faces.shape[0], 1), 3), original.faces]).astype(np.int64).flatten())
     after_pvmesh1 = pv.PolyData(mesh1.vertices, np.hstack([np.full((mesh1.faces.shape[0], 1), 3), mesh1.faces]).astype(np.int64).flatten())
     after_pvmesh2 = pv.PolyData(mesh2.vertices, np.hstack([np.full((mesh2.faces.shape[0], 1), 3), mesh2.faces]).astype(np.int64).flatten())
@@ -523,7 +525,7 @@ def full_evaluation2(original, mesh1, mesh2, mesh3, mesh4, mesh5):
         ["vertices", len(original.vertices), len(mesh1.vertices), len(mesh2.vertices), len(mesh3.vertices), len(mesh4.vertices), len(mesh5.vertices)],
         ["faces", len(original.faces),len(mesh1.faces), len(mesh2.faces), len(mesh3.faces), len(mesh4.faces), len(mesh5.faces)],
         ["intersecting face pairs", len(before_intersections), len(after_intersections1), len(after_intersections2), len(after_intersections3), len(after_intersections4), len(after_intersections5)],
-        ["volume", before_trimesh.volume, after_trimesh1.volume, after_trimesh2.volume, after_trimesh3.volume, after_trimesh4.volume, after_trimesh5.volume],
+        ["volume", before_trimesh.volume, after_trimesh1.volume, after_trimesh2.volume, after_trimesh3.volume, outer_pymesh4.volume, after_trimesh5.volume],
         ["area", before_trimesh.area, after_trimesh1.area, after_trimesh2.area, after_trimesh3.area, after_trimesh4.area, after_trimesh5.area],
         ["mean aspect ratio", _evaluate_aspect_ratio(before_pvmesh), _evaluate_aspect_ratio(after_pvmesh1), _evaluate_aspect_ratio(after_pvmesh2), _evaluate_aspect_ratio(after_pvmesh3), _evaluate_aspect_ratio(after_pvmesh4), _evaluate_aspect_ratio(after_pvmesh5)],
         ["mMean condition", _evaluate_condition(before_pvmesh), _evaluate_condition(after_pvmesh1), _evaluate_condition(after_pvmesh2), _evaluate_condition(after_pvmesh3), _evaluate_condition(after_pvmesh4), _evaluate_condition(after_pvmesh5)],
@@ -1274,7 +1276,6 @@ def align_submesh_boundary2(remaining_mesh, repaired_submesh):
 def vis_for_paper(
     original, mesh1, mesh2, mesh3, mesh4, mesh5
 ):
-    # CAUTION: Mesh4 is pyvista
     intersections = pymesh.detect_self_intersection(original)
     intersecting_faces = set(intersections.flatten())
 
@@ -1282,7 +1283,7 @@ def vis_for_paper(
     mesh1_pv = convert_to_pyvista(mesh1)
     mesh2_pv = convert_to_pyvista(mesh2)
     mesh3_pv = convert_to_pyvista(mesh3)
-    #mesh4_pv = convert_to_pyvista(mesh4)
+    mesh4_pv = convert_to_pyvista(mesh4)
     mesh5_pv = convert_to_pyvista(mesh5)
 
     scalars = [
@@ -1334,8 +1335,8 @@ def vis_for_paper(
     # Subplot (1, 1): Mesh 4
     plotter.subplot(1, 1)
     plotter.add_mesh(
-        mesh4, show_edges=True, edge_color='black',
-        line_width=0.3, label='Mesh 4', scalars="BoundaryLabels", cmap="viridis", show_scalar_bar=False
+        mesh4_pv, show_edges=True, edge_color='black',
+        line_width=0.3, label='Mesh 4', color='white'
     )
     plotter.add_text('SurfaceNets', position='upper_left', font_size=15)
 
@@ -1355,7 +1356,6 @@ def vis_for_paper_inner(
     original, mesh1, mesh2, mesh3, mesh4, mesh5
 ):
 
-    # CAUTION: Mesh4 is pyvista
     intersections = pymesh.detect_self_intersection(original)
     intersecting_faces = set(intersections.flatten())
 
@@ -1363,7 +1363,7 @@ def vis_for_paper_inner(
     mesh1_pv = convert_to_pyvista(mesh1)
     mesh2_pv = convert_to_pyvista(mesh2)
     mesh3_pv = convert_to_pyvista(mesh3)
-    mesh4_pv = mesh4
+    mesh4_pv = convert_to_pyvista(mesh4)
     mesh5_pv = convert_to_pyvista(mesh5)
 
     scalars = [
@@ -1406,10 +1406,7 @@ def vis_for_paper_inner(
     plotter.add_text("MeshLib", position='upper_left', font_size=15)
 
     plotter.subplot(1, 1)
-    actor4 = plotter.add_mesh(
-        mesh4_pv, show_edges=True, edge_color='black', scalars="BoundaryLabels", cmap="viridis",
-        show_scalar_bar=False
-    )
+    actor4 = plotter.add_mesh(mesh4_pv, color='white', show_edges=True, edge_color='black')
     mesh_actors.append(actor4)
     plotter.add_text("SurfaceNets", position='upper_left', font_size=15)
 
