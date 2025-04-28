@@ -46,6 +46,7 @@ def voxelize_and_save(mesh_path, output_dir, voxel_size=0.01):
     with open(meta_path, "w") as f:
         f.write(f"{label_array.shape[0]} {label_array.shape[1]} {label_array.shape[2]}\n")
         f.write(f"{voxel_size} {voxel_size} {voxel_size}\n")
+        f.write(f"{global_origin[0]} {global_origin[1]} {global_origin[2]}\n")
 
     return label_array
 
@@ -87,5 +88,5 @@ if __name__ == "__main__":
         median_edge_length = compute_median_edge_length(pmesh)
         voxel_size = median_edge_length
 
-        voxelize_and_save(mesh_file, output_dir, voxel_size=voxel_size)
+        voxelize_and_save(mesh_file, output_dir, voxel_size=voxel_size/4)
 

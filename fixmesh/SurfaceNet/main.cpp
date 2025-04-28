@@ -9,7 +9,7 @@
 #include "MMSurfaceNet.h"
 #include "MMGeometryOBJ.h"
 
-bool loadMeta(const std::string& metaFilename, int arraySize[3], float voxelSize[3]) {
+bool loadMeta(const std::string& metaFilename, int arraySize[3], float voxelSize[3], float origin[3]) {
     std::ifstream metaFile(metaFilename);
     if (!metaFile.is_open()) {
         std::cerr << "Failed to open metadata file: " << metaFilename << std::endl;
@@ -18,6 +18,7 @@ bool loadMeta(const std::string& metaFilename, int arraySize[3], float voxelSize
 
     metaFile >> arraySize[0] >> arraySize[1] >> arraySize[2];
     metaFile >> voxelSize[0] >> voxelSize[1] >> voxelSize[2];
+    metaFile >> origin[0]    >> origin[1]    >> origin[2];
 
     metaFile.close();
     return true;
@@ -36,7 +37,7 @@ unsigned short* loadRawLabels(const std::string& rawFilename, size_t numElements
     return labels;
 }
 
-void writeOBJ(const MMGeometryOBJ::OBJData& data, const std::string& filename) {
+void writeOBJ(const MMGeometryOBJ::OBJData& data, const std::string& filename, const float origin[3]) {
     std::ofstream obj(filename);
     if (!obj.is_open()) {
         std::cerr << "Failed to write OBJ file: " << filename << std::endl;
@@ -44,7 +45,7 @@ void writeOBJ(const MMGeometryOBJ::OBJData& data, const std::string& filename) {
     }
 
     for (const auto& v : data.vertexPositions) {
-        obj << "v " << v[0] << " " << v[1] << " " << v[2] << "\n";
+        obj << "v " << (v[0] + origin[0]) << " " << (v[1] + origin[1]) << " " << (v[2] + origin[2]) << "\n";
     }
 
     for (const auto& f : data.triangles) {
@@ -57,7 +58,8 @@ void writeOBJ(const MMGeometryOBJ::OBJData& data, const std::string& filename) {
 
 void writeCombinedOBJ(const std::vector<MMGeometryOBJ::OBJData>& objDatas,
     const std::vector<int>& labels,
-    const std::string& filename)
+    const std::string& filename, 
+    const float origin[3])
 {
     std::ofstream objFile(filename);
     if (!objFile.is_open()) {
@@ -78,7 +80,7 @@ void writeCombinedOBJ(const std::vector<MMGeometryOBJ::OBJData>& objDatas,
 
         // write vertices
         for (const auto& v : data.vertexPositions)
-        objFile << "v " << v[0] << ' ' << v[1] << ' ' << v[2] << '\n';
+            objFile << "v " << (v[0] + origin[0]) << ' ' << (v[1] + origin[1]) << ' ' << (v[2] + origin[2]) << '\n';
 
         // write faces with **corrected** indices
         for (const auto& f : data.triangles)
@@ -109,7 +111,11 @@ int main() {
 
         int arraySize[3];
         float voxelSize[3];
-        if (!loadMeta(metaFilename, arraySize, voxelSize)) return 1;
+        float origin[3];
+        if (!loadMeta(metaFilename, arraySize, voxelSize, origin)) {
+            std::cerr << "meta read failed\n";
+            return 1;   
+        }
 
         size_t numElements = static_cast<size_t>(arraySize[0]) * arraySize[1] * arraySize[2];
         unsigned short* labels = loadRawLabels(rawFilename, numElements);
@@ -130,7 +136,7 @@ int main() {
             std::ostringstream filename;
             filename << caseDir << "label_" << label << ".obj";
             MMGeometryOBJ::OBJData objData = exporter.objData(label);
-            writeOBJ(objData, filename.str());
+            writeOBJ(objData, filename.str(), origin);
         }
 
         // Export everything
@@ -139,7 +145,7 @@ int main() {
             MMGeometryOBJ::OBJData objData = exporter.objData(label);
             allObjData.push_back(objData);
         }
-        writeCombinedOBJ(allObjData, labelList, caseDir + "combined_labels.obj");
+        writeCombinedOBJ(allObjData, labelList, caseDir + "combined_labels.obj", origin);
 
         delete surfaceNet;
         delete[] labels;
