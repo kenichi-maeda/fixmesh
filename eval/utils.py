@@ -622,6 +622,35 @@ def _evaluate_angle_deviation(mesh):
 
     return np.mean(deviations)
 
+def full_evaluation_before_after(original, mesh1):
+    before_trimesh = trimesh.Trimesh(vertices=original.vertices, faces=original.faces)
+    after_trimesh1 = trimesh.Trimesh(vertices=mesh1.vertices, faces=mesh1.faces)
+
+    before_pvmesh = pv.PolyData(original.vertices, np.hstack([np.full((original.faces.shape[0], 1), 3), original.faces]).astype(np.int64).flatten())
+    after_pvmesh1 = pv.PolyData(mesh1.vertices, np.hstack([np.full((mesh1.faces.shape[0], 1), 3), mesh1.faces]).astype(np.int64).flatten())
+
+    before_intersections = pymesh.detect_self_intersection(original)
+    after_intersections1 = pymesh.detect_self_intersection(mesh1)
+
+    table_data = [
+        ["Metric", "Original", "After"],
+        ["vertices", len(original.vertices), len(mesh1.vertices)],
+        ["faces", len(original.faces),len(mesh1.faces)],
+        ["intersecting face pairs", len(before_intersections), len(after_intersections1)],
+        ["volume", before_trimesh.volume, after_trimesh1.volume],
+        ["area", before_trimesh.area, after_trimesh1.area],
+        ["mean aspect ratio", _evaluate_aspect_ratio(before_pvmesh), _evaluate_aspect_ratio(after_pvmesh1)],
+        ["mMean condition", _evaluate_condition(before_pvmesh), _evaluate_condition(after_pvmesh1)],
+        ["mean max angle", _evaluate_max_angle(before_pvmesh),  _evaluate_max_angle(after_pvmesh1)],
+        ["mean min angle", _evaluate_min_angle(before_pvmesh),  _evaluate_min_angle(after_pvmesh1)],
+        ["mean scaled jacobian", _evaluate_scaled_jacobian(before_pvmesh), _evaluate_scaled_jacobian(after_pvmesh1)],
+        ["mean displacement", "NaN", _evaluate_displacement(original, mesh1)],
+        ["mean angle deviation", _evaluate_angle_deviation(original), _evaluate_angle_deviation(mesh1)],
+        ["intact vertices (%)", "Nan", _evaluate_intact_vertices2(original, mesh1)]
+    ]
+
+    print(tabulate(table_data, headers="firstrow", tablefmt="grid"))
+
 
 def extract_submesh_by_bbox(mesh, local_min, local_max):
     """
