@@ -17,3 +17,6 @@ See https://kenichi-maeda.github.io/fixmesh/.
 ## Visualization
 See https://kenichi-maeda.github.io/meshViewer/.
 
+## Acknowledgement
+I received assistance from ChatGPT for coding.
+
