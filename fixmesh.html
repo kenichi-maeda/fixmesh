@@ -102,6 +102,56 @@
 </ol>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="fixmesh.detach.detach_repair_raw">
+<span class="sig-prename descclassname"><span class="pre">fixmesh.detach.</span></span><span class="sig-name descname"><span class="pre">detach_repair_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sample_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fixmesh/detach.html#detach_repair_raw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fixmesh.detach.detach_repair_raw" title="Link to this definition">¶</a></dt>
+<dd><p>Fix self-intersections by detaching mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>mesh</em>) – The input mesh.</p></li>
+<li><p><strong>contact_thresold</strong> (<em>float</em><em>, </em><em>optional</em>) – The separation distance between meshes. Defaults to 0.06.</p></li>
+<li><p><strong>max_iters</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations to repair. Defaults to 10.</p></li>
+<li><p><strong>num_sample_points</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of sampling points of the “reference” mesh.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new mesh with no self-intersections.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Mesh</p>
+</dd>
+</dl>
+<ol class="arabic simple">
+<li><p>Load a mesh and split into submeshes.</p></li>
+<li><p>Identify smallest-volume piece as ‘inner’, largest-volume piece as ‘outer’.</p></li>
+<li><p>Convert each to Open3D.</p></li>
+<li><p>Iteratively shrink the inner mesh so it stays inside the outer.</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fixmesh.detach.detach_repair_raw_2">
+<span class="sig-prename descclassname"><span class="pre">fixmesh.detach.</span></span><span class="sig-name descname"><span class="pre">detach_repair_raw_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sample_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fixmesh/detach.html#detach_repair_raw_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fixmesh.detach.detach_repair_raw_2" title="Link to this definition">¶</a></dt>
+<dd><p>Fix self-intersections by detaching mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>mesh</em>) – The input mesh.</p></li>
+<li><p><strong>contact_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The separation distance between meshes. Defaults to 0.06.</p></li>
+<li><p><strong>max_iters</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of iterations to repair. Defaults to 10.</p></li>
+<li><p><strong>num_sample_points</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of sampling points of the “reference” mesh.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new mesh with no self-intersections.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>o3d.geometry.TriangleMesh</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
