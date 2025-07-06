@@ -33,6 +33,8 @@ def detach_repair(
 
     Adjust the values of max_iters and num_sample_points based on your input mesh.
     
+    Increasing contact_threshold increases robustness. 
+
     """
     tm = input
     submeshes = tm.split(only_watertight=True)
