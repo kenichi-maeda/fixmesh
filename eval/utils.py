@@ -1462,3 +1462,42 @@ def vis_for_paper_inner(
 
     display(plotter.show(jupyter_backend='trame'))
     return plotter
+
+import pymesh
+import trimesh
+from itertools import combinations
+
+def _pymesh_to_trimesh(mesh: pymesh.Mesh) -> trimesh.Trimesh:
+    return trimesh.Trimesh(vertices=mesh.vertices, faces=mesh.faces, process=False)
+
+def _trimesh_to_pymesh(tm: trimesh.Trimesh) -> pymesh.Mesh:
+    return pymesh.form_mesh(tm.vertices, tm.faces)
+
+def find_intersecting_pair_by_self_intersection(mesh: pymesh.Mesh):
+    # Step 1: Convert to Trimesh and split into submeshes
+    tm = _pymesh_to_trimesh(mesh)
+    submeshes_tm = tm.split(only_watertight=False)
+    submeshes_pm = [_trimesh_to_pymesh(sm) for sm in submeshes_tm]
+
+    # Step 2: Try combining each pair and detect self-intersection
+    for i, j in combinations(range(len(submeshes_pm)), 2):
+        m1 = submeshes_pm[i]
+        m2 = submeshes_pm[j]
+
+        # Combine meshes by stacking vertices and faces
+        combined = _combine_meshes(m1, m2)
+
+        # Check for self-intersection
+        intersections = pymesh.detect_self_intersection(combined)
+        if intersections.size > 0:
+            print(f"Found self-intersection between submesh {i} and {j}")
+            return combined, i, j
+
+    print("No intersecting pair found that causes self-intersection.")
+    return None, None, None
+
+def _combine_meshes(m1: pymesh.Mesh, m2: pymesh.Mesh) -> pymesh.Mesh:
+    v_combined = np.vstack([m1.vertices, m2.vertices])
+    f2_offset = len(m1.vertices)
+    f_combined = np.vstack([m1.faces, m2.faces + f2_offset])
+    return pymesh.form_mesh(v_combined, f_combined)
