@@ -10,9 +10,8 @@ import trimesh
 from scipy.spatial import cKDTree
 from numpy.linalg import norm
 import pymeshfix
-import meshlib.mrmeshpy as mrmesh
+# import meshlib.mrmeshpy as mrmesh
 from scipy.sparse import lil_matrix
-
 
 def convert_to_pyvista(mesh):
     vertices = mesh.vertices
