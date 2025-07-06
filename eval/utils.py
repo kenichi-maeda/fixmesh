@@ -631,12 +631,13 @@ def full_evaluation_before_after(original, mesh1):
     before_intersections = pymesh.detect_self_intersection(original)
     after_intersections1 = pymesh.detect_self_intersection(mesh1)
 
+    # abs(volume) -> in case a emsh is not a warertight
     table_data = [
         ["Metric", "Original", "After"],
         ["vertices", len(original.vertices), len(mesh1.vertices)],
         ["faces", len(original.faces),len(mesh1.faces)],
         ["intersecting face pairs", len(before_intersections), len(after_intersections1)],
-        ["volume", before_trimesh.volume, after_trimesh1.volume],
+        ["volume", abs(before_trimesh.volume), abs(after_trimesh1.volume)],
         ["area", before_trimesh.area, after_trimesh1.area],
         ["mean aspect ratio", _evaluate_aspect_ratio(before_pvmesh), _evaluate_aspect_ratio(after_pvmesh1)],
         ["mMean condition", _evaluate_condition(before_pvmesh), _evaluate_condition(after_pvmesh1)],
