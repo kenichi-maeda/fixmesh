@@ -31,7 +31,7 @@ def detach_repair(
     3) Convert each to Open3D. 
     4) Iteratively shrink the inner mesh so it stays inside the outer.
 
-
+    Adjust the values of max_iters and num_sample_points based on your input mesh.
     
     """
     tm = input
