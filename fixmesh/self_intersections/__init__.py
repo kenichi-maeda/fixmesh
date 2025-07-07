@@ -6,7 +6,7 @@ from .local_remesh import fix_with_localRemesh
 __all__ = [
     "fix_with_pymeshfix",
     "fix_with_pymesh",
-    # "fix_with_meshlib",
+    "fix_with_meshlib",
     "fix_with_surfaceNet",
     "fix_with_localRemesh"
 ]
