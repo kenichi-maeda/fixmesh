@@ -2,41 +2,51 @@ import trimesh
 import numpy as np
 import pymesh
 from collections import defaultdict
+import pymeshfix
 
 def cut_repair(mesh):
     """
-    Fix self-intersections by cutting the given mesh.
+    Removes intersecting faces and fills open boundary holes.
+    Keeps only the number of major components that existed before cutting.
 
     Args:
-        mesh (pymesh.Mesh): The input mesh with self-intersections.
+        mesh (pymesh.Mesh): Input mesh, possibly with self-intersections.
 
     Returns:
-        pymesh.Mesh: The repaired mesh with no self-intersections.
+        trimesh.Trimesh: Repaired, non-intersecting, watertight mesh.
     """
 
+    # Step 0: Record number of connected components before cut
+    mesh, _  = pymesh.remove_duplicated_vertices(mesh)
     count = _count_num_components(mesh)
-    intersecting_faces = pymesh.detect_self_intersection(mesh)
-    intersected_faces = set(intersecting_faces.flatten())
 
-    remaining_faces = np.setdiff1d(np.arange(mesh.num_faces), list(intersected_faces))
-    remaining_faces_vertices = mesh.faces[remaining_faces]
+    # Step 1: Remove self-intersecting faces
+    intersecting_faces = pymesh.detect_self_intersection(mesh).flatten()
+    unique_faces = np.setdiff1d(np.arange(mesh.num_faces), intersecting_faces)
+    face_mask = mesh.faces[unique_faces]
+    uniq_verts, remap = np.unique(face_mask, return_inverse=True)
+    cut_mesh = pymesh.form_mesh(mesh.vertices[uniq_verts], remap.reshape(-1, 3))
 
-    unique_vertices, new_faces = np.unique(remaining_faces_vertices, return_inverse=True)
-    new_mesh = pymesh.form_mesh(mesh.vertices[unique_vertices], new_faces.reshape(-1, 3))
-
-    submeshes = _pymesh_to_trimesh(new_mesh).split(only_watertight=False)
-    submeshes_sorted = sorted(submeshes, key=lambda x: len(x.vertices), reverse=True)
+    # Step 2: Split into submeshes (We discard small fragments here).
+    submeshes = _pymesh_to_trimesh(cut_mesh).split(only_watertight=False)
+    submeshes_sorted = sorted(submeshes, key=lambda m: len(m.vertices), reverse=True)
     submeshes_needed = submeshes_sorted[:count]
+    print(f"Found {len(submeshes)} components after cut. Keeping {count} largest.")
 
-    repaired_submesh_needed = []
-    for submesh in submeshes_needed:
-        submesh = pymesh.convex_hull(_trimesh_to_pymesh(submesh))
-        submesh = _collapse_long_edges(submesh)
-        submesh = _pymesh_to_trimesh(submesh)
-        repaired_submesh_needed.append(submesh)
+    # Step 3: Fill holes only in needed components
+    repaired_components = []
+    for sub in submeshes_needed:
+        if sub.is_watertight:
+            repaired_components.append(sub)
+        else:
+            mf = pymeshfix.MeshFix(sub.vertices, sub.faces)
+            mf.repair(verbose=False, joincomp=True, remove_smallest_components=False)
+            v, f = mf.v, mf.f
+            repaired_components.append(trimesh.Trimesh(vertices=v, faces=f, process=False))
 
-    final = trimesh.util.concatenate(repaired_submesh_needed)
-    return final
+    # Step 4: Combine and return
+    final_mesh = trimesh.util.concatenate(repaired_components)
+    return final_mesh
 
 def _pymesh_to_trimesh(mesh):
     return trimesh.Trimesh(vertices=mesh.vertices, faces=mesh.faces)
@@ -78,9 +88,9 @@ def _count_num_components(mesh):
     return len(components)
 
 
-def cut_repair2(mesh):
+def _cut_repair_legacy(mesh):
     """
-    Fix self-intersections by cutting the given mesh. (This is more stable thatn cut_repair())
+    Fix self-intersections by cutting the given mesh.
 
     Args:
         mesh (pymesh.Mesh): The input mesh with self-intersections.
