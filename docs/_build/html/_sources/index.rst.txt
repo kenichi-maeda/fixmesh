@@ -1,4 +1,4 @@
-Welcome to fixmesh's documentation!
+Welcome to fixmesh!
 ===================================
 
 This is the documentation for the `fixmesh` library.
