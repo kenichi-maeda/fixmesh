@@ -15,7 +15,9 @@ cd fixmesh
 See https://kenichi-maeda.github.io/fixmesh/.
 
 ## Visualization
-See https://kenichi-maeda.github.io/meshViewer/.
+See https://kenichi-maeda.github.io/meshViewer/. (Merging Neighboring Meshes)<br>
+See https://kenichi-maeda.github.io/meshViewer2/ (Detaching Enclosed Meshes)<br>
+See https://kenichi-maeda.github.io/meshViewer3/ (Detaching Neighboring Meshes).
 
 ## Acknowledgement
 I received assistance from ChatGPT for coding.
