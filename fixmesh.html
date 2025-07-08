@@ -35,8 +35,42 @@
             
   <section id="fixmesh-package">
 <h1>fixmesh package<a class="headerlink" href="#fixmesh-package" title="Link to this heading">¶</a></h1>
-<section id="fixmesh-cut">
-<h2>fixmesh.cut<a class="headerlink" href="#fixmesh-cut" title="Link to this heading">¶</a></h2>
+<section id="module-fixmesh.cut">
+<span id="fixmesh-cut"></span><h2>fixmesh.cut<a class="headerlink" href="#module-fixmesh.cut" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fixmesh.cut.cut_repair">
+<span class="sig-prename descclassname"><span class="pre">fixmesh.cut.</span></span><span class="sig-name descname"><span class="pre">cut_repair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fixmesh/cut.html#cut_repair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fixmesh.cut.cut_repair" title="Link to this definition">¶</a></dt>
+<dd><p>Fix self-intersections by cutting the given mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mesh</strong> (<em>pymesh.Mesh</em>) – The input mesh with self-intersections.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The repaired mesh with no self-intersections.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pymesh.Mesh</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fixmesh.cut.cut_repair2">
+<span class="sig-prename descclassname"><span class="pre">fixmesh.cut.</span></span><span class="sig-name descname"><span class="pre">cut_repair2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fixmesh/cut.html#cut_repair2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fixmesh.cut.cut_repair2" title="Link to this definition">¶</a></dt>
+<dd><p>Fix self-intersections by cutting the given mesh. (This is more stable thatn cut_repair())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mesh</strong> (<em>pymesh.Mesh</em>) – The input mesh with self-intersections.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The repaired mesh with no self-intersections.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>trimesh.Trimesh</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-fixmesh.detach">
 <span id="fixmesh-detach"></span><h2>fixmesh.detach<a class="headerlink" href="#module-fixmesh.detach" title="Link to this heading">¶</a></h2>
@@ -124,7 +158,7 @@
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">fixmesh package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#fixmesh-cut">fixmesh.cut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-fixmesh.cut">fixmesh.cut</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-fixmesh.detach">fixmesh.detach</a></li>
 </ul>
 </li>
